@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costos y Precios</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#10B981">
+    <style>
+        /* Custom styles to use Poppins font */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Custom styles for number input arrows */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .insumo-fila:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-400">Calculadora de Precios</h1>
+            <p class="text-gray-400 mt-2">Calcula cuánto cobrar por tus productos o servicios añadiendo tus costos y tu margen de ganancia.</p>
+        </header>
+
+        <!-- Main Calculator Card -->
+        <main class="bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 space-y-8">
+
+            <!-- Cost Items Section -->
+            <div>
+                <h2 class="text-xl sm:text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Lista de Costos y Materiales</h2>
+                <div id="lista-insumos" class="space-y-4">
+                    <!-- Dynamic rows will be inserted here -->
+                </div>
+                <button id="agregar-insumo" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Añadir Nuevo Insumo
+                </button>
+            </div>
+
+            <!-- Summary and Profit Section -->
+            <div class="pt-6 border-t border-gray-700 space-y-6">
+                 <div class="bg-gray-900 p-4 rounded-lg text-center">
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Costo Total por Producto/Servicio</label>
+                    <div id="costo-total" class="text-3xl sm:text-4xl font-bold text-amber-400">$0.00</div>
+                </div>
+
+                <h2 class="text-xl sm:text-2xl font-semibold text-center !mt-8">2. Define tu Ganancia</h2>
+
+                <!-- Profit Calculation -->
+                <div class="grid md:grid-cols-2 gap-4 md:gap-8 items-center">
+                    <!-- Profit Margin Input -->
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <label for="margen-ganancia" class="block text-sm font-medium text-gray-400 mb-1">Margen de Ganancia (%)</label>
+                        <div class="relative">
+                            <input type="number" id="margen-ganancia" class="w-full bg-gray-700 border-gray-600 text-white rounded-md p-3 text-xl sm:text-2xl font-bold text-center focus:ring-emerald-500 focus:border-emerald-500" value="30" min="0">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xl sm:text-2xl font-bold text-gray-400">%</span>
+                        </div>
+                    </div>
+                    <!-- Additional Profit Input -->
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <label for="ganancia-adicional" class="block text-sm font-medium text-gray-400 mb-1">Ganancia Adicional Fija ($)</label>
+                         <div class="relative">
+                            <input type="number" id="ganancia-adicional" placeholder="0.00" class="w-full bg-gray-700 border-gray-600 text-white rounded-md p-3 text-xl sm:text-2xl font-bold text-center focus:ring-emerald-500 focus:border-emerald-500" min="0" step="0.01">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl sm:text-2xl font-bold text-gray-400">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Suggested Price -->
+            <div class="mt-8 pt-6 border-t border-gray-700">
+                <h2 class="text-xl sm:text-2xl font-semibold text-center mb-4">3. Precio de Venta Sugerido</h2>
+                <div class="bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 p-6 rounded-2xl text-center">
+                    <div id="precio-final" class="text-4xl md:text-5xl font-bold">$0.00</div>
+                    <p class="text-emerald-300/80 mt-1">Este es el precio que deberías cobrar.</p>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            <p>Creado para ayudarte a crecer.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get DOM elements
+            const listaInsumos = document.getElementById('lista-insumos');
+            const agregarInsumoBtn = document.getElementById('agregar-insumo');
+            const costoTotalEl = document.getElementById('costo-total');
+            const margenGananciaEl = document.getElementById('margen-ganancia');
+            const gananciaAdicionalEl = document.getElementById('ganancia-adicional');
+            const precioFinalEl = document.getElementById('precio-final');
+
+            let insumoIdCounter = 0;
+
+            // --- FUNCTIONS ---
+
+            /**
+             * Creates and adds a new row for an expense item to the list.
+             */
+            const agregarInsumo = () => {
+                insumoIdCounter++;
+                const insumoRow = document.createElement('div');
+                // Responsive grid: 2 columns on mobile, 12 on medium screens and up
+                insumoRow.classList.add('insumo-fila', 'grid', 'grid-cols-2', 'md:grid-cols-12', 'gap-x-4', 'gap-y-3', 'items-end', 'p-3', 'bg-gray-700/50', 'rounded-lg');
+                insumoRow.setAttribute('data-id', insumoIdCounter);
+
+                insumoRow.innerHTML = `
+                    <!-- Input for Item Name: full width on mobile -->
+                    <div class="col-span-2 md:col-span-4">
+                        <label class="text-xs text-gray-400">Nombre del Insumo</label>
+                        <input type="text" placeholder="Ej: Esencia de Vainilla" class="nombre-insumo w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    </div>
+                    
+                    <!-- Input for Total Cost of the Package -->
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="text-xs text-gray-400">Costo Envase ($)</label>
+                        <input type="number" placeholder="10.00" class="costo-envase w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500" min="0" step="0.01">
+                    </div>
+                    
+                    <!-- Input for Quantity per Package -->
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="text-xs text-gray-400">Cant. por Envase</label>
+                        <input type="number" placeholder="500" class="cantidad-envase w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500" min="1" step="1">
+                    </div>
+
+                    <!-- Display for Cost per Use -->
+                    <div class="col-span-1 md:col-span-3">
+                        <label class="text-xs text-gray-400 block">Costo por Uso</label>
+                        <span class="costo-por-uso text-lg font-bold text-amber-300">$0.00</span>
+                    </div>
+
+                    <!-- Delete Button -->
+                    <div class="col-span-1 md:col-span-1 flex justify-end">
+                         <button class="eliminar-insumo bg-red-600 hover:bg-red-700 text-white font-bold p-2 rounded-full transition-colors duration-300 h-10 w-10 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    </div>
+                `;
+
+                listaInsumos.appendChild(insumoRow);
+            };
+
+            /**
+             * Calculates all costs and updates the UI.
+             */
+            const calcularCostos = () => {
+                let costoTotal = 0;
+                const filas = document.querySelectorAll('.insumo-fila');
+
+                filas.forEach(fila => {
+                    const costoEnvase = parseFloat(fila.querySelector('.costo-envase').value) || 0;
+                    const cantidadEnvase = parseFloat(fila.querySelector('.cantidad-envase').value) || 1;
+                    const costoPorUsoEl = fila.querySelector('.costo-por-uso');
+                    
+                    const costoPorUso = cantidadEnvase > 0 ? costoEnvase / cantidadEnvase : 0;
+                    
+                    costoPorUsoEl.textContent = `$${costoPorUso.toFixed(2)}`;
+                    costoTotal += costoPorUso;
+                });
+
+                costoTotalEl.textContent = `$${costoTotal.toFixed(2)}`;
+
+                const margenGanancia = parseFloat(margenGananciaEl.value) || 0;
+                const gananciaAdicional = parseFloat(gananciaAdicionalEl.value) || 0;
+                
+                const precioConMargen = costoTotal * (1 + (margenGanancia / 100));
+                const precioFinal = precioConMargen + gananciaAdicional;
+
+                precioFinalEl.textContent = `$${precioFinal.toFixed(2)}`;
+            };
+
+            /**
+             * Handles click events for deleting rows.
+             */
+            const manejarClick = (e) => {
+                if (e.target.closest('.eliminar-insumo')) {
+                    e.target.closest('.insumo-fila').remove();
+                    calcularCostos();
+                }
+            };
+
+
+            // --- EVENT LISTENERS ---
+            agregarInsumoBtn.addEventListener('click', agregarInsumo);
+            document.body.addEventListener('input', (e) => {
+                if (e.target.matches('.costo-envase, .cantidad-envase, #margen-ganancia, #ganancia-adicional')) {
+                    calcularCostos();
+                }
+            });
+            listaInsumos.addEventListener('click', manejarClick);
+
+
+            // --- INITIALIZATION ---
+            agregarInsumo();
+        });
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                console.log('ServiceWorker registrado con éxito:', registration.scope);
+            }).catch(error => {
+                console.log('Fallo en el registro del ServiceWorker:', error);
+            });
+            });
+        }
+    </script>
+    
+</body>
+</html>
