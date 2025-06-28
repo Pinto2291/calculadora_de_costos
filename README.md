@@ -3,6 +3,8 @@
 ❤️ Dedicatoria Especial
 Esta aplicación fue creada con mucho amor por el ingeniero y desarrollador Ignacio Pinto para su querida novia, una talentosa cosmiatra, con el objetivo de facilitar su increíble trabajo y ayudarla a calcular los precios de sus servicios y productos de una manera sencilla y eficiente.
 
+Link  [https://pinto2291.github.io/calculadora_de_costos/]
+
 📝 Descripción del Proyecto
 Calculadora de Precios es una herramienta web diseñada para emprendedores, freelancers y pequeños empresarios que necesitan una forma rápida y precisa de determinar el precio de venta de sus productos o servicios. La aplicación permite desglosar todos los costos de los insumos, añadir un margen de ganancia porcentual y una ganancia fija adicional para obtener un precio final sugerido justo tanto para el vendedor como para el cliente.
 
