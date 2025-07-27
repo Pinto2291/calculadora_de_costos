@@ -1,0 +1,21 @@
+ body { 
+    font-family: 'Poppins', sans-serif; 
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none; margin: 0;
+        }
+        input[type=number] { -moz-appearance: textfield; }
+
+        @media (max-width: 768px) {
+            body { font-size: 0.75rem; }
+            h1, h2, h3, h4 { font-size: 1rem; }
+            input, button, .costo-dolar, .costo-bolivar, .porcentaje-insumo {
+                font-size: 0.75rem;
+            }
+            .text-4xl { font-size: 1.25rem; }
+            .text-3xl { font-size: 1.125rem; }
+            .text-lg { font-size: 0.875rem; }
+            .p-3, .p-4, .p-6 { padding: 0.5rem; }
+        }

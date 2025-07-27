@@ -8,27 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none; margin: 0;
-        }
-        input[type=number] { -moz-appearance: textfield; }
-
-        @media (max-width: 768px) {
-            body { font-size: 0.75rem; }
-            h1, h2, h3, h4 { font-size: 1rem; }
-            input, button, .costo-dolar, .costo-bolivar, .porcentaje-insumo {
-                font-size: 0.75rem;
-            }
-            .text-4xl { font-size: 1.25rem; }
-            .text-3xl { font-size: 1.125rem; }
-            .text-lg { font-size: 0.875rem; }
-            .p-3, .p-4, .p-6 { padding: 0.5rem; }
-        }
-    </style>
+    
 </head>
 <body class="bg-gray-900 text-white antialiased">
     <div class="container mx-auto p-2 sm:p-4 max-w-6xl">
@@ -50,15 +32,15 @@
         <main class="bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-6 space-y-8">
             <div>
                 <h2 class="text-xl font-semibold mb-4">1. Lista de Costos y Materiales</h2>
-                <div class="grid grid-cols-7 md:grid-cols-8 gap-2 text-sm text-gray-400 mb-2">
+
+                <div class="grid grid-cols-6 gap-2 text-xs text-gray-400 mb-2">
                     <div class="col-span-2">Insumo</div>
                     <div class="col-span-1">Costo ($)</div>
-                    <div class="col-span-1">Cant. x Envase</div>
-                    <div class="col-span-1">$/Uso</div>
-                    <div class="col-span-1">Bs/Uso</div>
-                    <div class="col-span-1">%</div>
-                    <div class="col-span-1 text-center">Eliminar</div>
+                    <div class="col-span-1">Cant.</div>
+                    <div class="col-span-1 text-center">$/Uso</div>
+                    <div class="col-span-1 text-center">Bs/Uso</div>
                 </div>
+
                 <div id="lista-insumos" class="space-y-4"></div>
                 <button id="agregar-insumo" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">Añadir Nuevo Insumo</button>
             </div>
@@ -94,105 +76,10 @@
     </div>
 
     <footer class="text-center mt-12 text-sm text-gray-500">
-        Hecho con amor por Ignacio Developer · <a href="https://pinto2291.github.io/ignacio_website/" target="_blank" class="text-emerald-400 hover:underline">Mi portafolio</a>
+        Hecho con amor por Ignacio Developer · <a href="https://pinto2291.github.io/ignacio_website/" target="_blank" class="text-emerald-400 hover:underline">Portafolio</a>
     </footer>
 
-    <script>
-    const formato = n => n.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    <script src="script.js"></script>
 
-    const listaInsumos = document.getElementById("lista-insumos");
-    const btnAgregar = document.getElementById("agregar-insumo");
-    const bcvInput = document.getElementById("bcv");
-    const margenInput = document.getElementById("margen-ganancia");
-    const adicionalInput = document.getElementById("ganancia-adicional");
-    const totalDisplay = document.getElementById("costo-total");
-    const nombreProcedimientoInput = document.getElementById("nombre-procedimiento");
-    const nombreProcedimientoTitulo = document.getElementById("nombre-procedimiento-titulo");
-    const nombreProcedimientoHeader = document.getElementById("nombre-procedimiento-header");
-    const precioOriginal = document.getElementById("precio-original");
-    const precioFinal = document.getElementById("precio-final");
-    const precioBs = document.getElementById("precio-bs");
-    const redondearBtn = document.getElementById("redondear");
-
-    function calcular() {
-        const bcv = parseFloat(bcvInput.value) || 0;
-        let total = 0;
-
-        const insumos = [...listaInsumos.children].map(row => {
-            const [nombre, costo, cantidad, usdUsoEl, bsUsoEl, porcentajeEl] = row.querySelectorAll("input, .costo-dolar, .costo-bolivar, .porcentaje-insumo");
-            const costoVal = parseFloat(costo.value) || 0;
-            const cantidadVal = parseFloat(cantidad.value) || 1;
-            const usoUsd = costoVal / cantidadVal;
-            const usoBs = usoUsd * bcv;
-            total += usoUsd;
-            usdUsoEl.textContent = "$" + formato(usoUsd);
-            bsUsoEl.textContent = "Bs " + formato(usoBs);
-            return { row, usoUsd };
-        });
-
-        totalDisplay.textContent = "$" + formato(total);
-
-        insumos.forEach(({ row, usoUsd }) => {
-            const porcentaje = total ? (usoUsd / total) * 100 : 0;
-            const porcentajeEl = row.querySelector(".porcentaje-insumo");
-            porcentajeEl.textContent = formato(porcentaje) + "%";
-        });
-
-        const margen = parseFloat(margenInput.value) || 0;
-        const adicional = parseFloat(adicionalInput.value) || 0;
-        const precio = total * (1 + margen / 100) + adicional;
-
-        precioOriginal.textContent = "Precio exacto: $" + formato(precio);
-        precioFinal.textContent = "$" + formato(precio);
-        precioBs.textContent = "Bs " + formato(precio * bcv);
-
-        return { precio, precioBs: precio * bcv };
-    }
-
-    function agregarInsumo(nombre = '', costo = '', cantidad = '') {
-        const div = document.createElement("div");
-        div.className = "grid grid-cols-7 md:grid-cols-8 gap-2 items-center";
-        div.innerHTML = `
-            <input type="text" class="col-span-2 bg-gray-700 p-2 rounded" placeholder="Ej: Crema limpiadora" value="${nombre}">
-            <input type="number" class="col-span-1 bg-gray-700 p-2 rounded" step="0.01" value="${costo}">
-            <input type="number" class="col-span-1 bg-gray-700 p-2 rounded" step="0.01" value="${cantidad}">
-            <div class="costo-dolar col-span-1">$0.00</div>
-            <div class="costo-bolivar col-span-1">Bs 0.00</div>
-            <div class="porcentaje-insumo col-span-1">0%</div>
-            <div class="col-span-1 flex justify-center">
-                <button class="text-red-500 hover:text-red-700" onclick="this.closest('div.grid').remove(); calcular();">
-                    <i data-lucide="trash-2"></i>
-                </button>
-            </div>
-        `;
-        listaInsumos.appendChild(div);
-        calcular();
-        lucide.createIcons();
-    }
-
-    btnAgregar.addEventListener("click", () => agregarInsumo());
-    bcvInput.addEventListener("input", calcular);
-    margenInput.addEventListener("input", calcular);
-    adicionalInput.addEventListener("input", calcular);
-    nombreProcedimientoInput.addEventListener("input", () => {
-        nombreProcedimientoTitulo.textContent = nombreProcedimientoInput.value;
-        nombreProcedimientoHeader.textContent = nombreProcedimientoInput.value ? nombreProcedimientoInput.value : 'Calculadora de Estructura de Costos';
-    });
-
-    redondearBtn.addEventListener("click", () => {
-        const { precio, precioBs: precioBsf } = calcular();
-        const redondeado = Math.ceil(precio / 5) * 5;
-        const redondeadoBs = Math.ceil(precioBsf / 5) * 5;
-        precioFinal.textContent = "$" + formato(redondeado);
-        precioBs.textContent = "Bs " + formato(redondeadoBs);
-    });
-
-    listaInsumos.addEventListener("input", calcular);
-
-    // Añadir un input por defecto al cargar
-    window.addEventListener('DOMContentLoaded', () => {
-        agregarInsumo();
-    });
-    </script>
 </body>
 </html>
