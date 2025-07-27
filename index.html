@@ -9,15 +9,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
 </head>
 <body class="bg-gray-900 text-white antialiased">
-    <div class="container mx-auto p-2 sm:p-4 max-w-6xl">
+
+    <div id="app-container">
+
+    <div class="container mx-auto p-2 sm:p-4 max-w-6xl relative">
+            
+    <header class="text-center mb-8">
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-emerald-400" id="nombre-procedimiento-header">Calculadora de Estructura de Costos</h1>
             <p class="text-gray-400 mt-2">Calcula el precio de venta a partir de tus insumos y costos.</p>
-        </header>
+    </header>
 
         <div class="mb-6">
             <label for="bcv" class="block text-sm font-medium text-gray-400 mb-1">Tasa del Dólar BCV (Bs)</label>
@@ -27,9 +33,43 @@
         <div class="mb-6">
             <label for="nombre-procedimiento" class="block text-sm font-medium text-gray-400 mb-1">Nombre del Procedimiento</label>
             <input type="text" id="nombre-procedimiento" placeholder="Limpieza facial" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="md:col-span-2">
+                    <label for="procedimientos-guardados" class="block text-sm font-medium text-gray-400 mb-1">Cargar Procedimiento</label>
+                    <select id="procedimientos-guardados" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+                        <option value="">-- Selecciona un procedimiento --</option>
+                    </select>
+                </div>
+                
+            <div class="flex items-end gap-2">
+                <button id="guardar-procedimiento" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg">Guardar</button>
+                <button id="eliminar-procedimiento" class="w-auto bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg">
+                    <i data-lucide="trash-2"></i>
+                </button>
+            </div>
         </div>
 
+
         <main class="bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-6 space-y-8">
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div>
+                        <label for="costos-fijos" class="block text-sm font-medium text-gray-400 mb-1">Costos Fijos Mensuales ($)</label>
+                        <input type="number" id="costos-fijos" placeholder="Ej: 200" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+                    </div>
+                <div>
+                    <label for="procedimientos-mes" class="block text-sm font-medium text-gray-400 mb-1">Procedimientos al Mes (Promedio)</label>
+                    <input type="number" id="procedimientos-mes" placeholder="Ej: 40" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+
+                <div>
+                    <label for="tiempo-procedimiento" class="block text-sm font-medium text-gray-400 mb-1">Tiempo del Procedimiento (Minutos)</label>
+                    <input type="number" id="tiempo-procedimiento" placeholder="Ej: 60" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+
+            </div>
+
             <div>
                 <h2 class="text-xl font-semibold mb-4">1. Lista de Costos y Materiales</h2>
 
@@ -49,7 +89,7 @@
                 <div class="bg-gray-900 p-4 rounded-lg">
                     <label class="block text-sm text-gray-400 mb-1">Costo Total</label>
                     <div id="costo-total" class="text-3xl text-amber-400 font-bold">$0.00</div>
-                </div>
+            </div>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
@@ -70,15 +110,29 @@
                     <div id="precio-final" class="text-4xl font-bold">$0.00</div>
                     <div id="precio-bs" class="text-lg text-emerald-200 mt-2">Bs 0.00</div>
                     <button id="redondear" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg">Redondear valor</button>
+
+                    <button id="imprimir" class="mt-4 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">Imprimir / Guardar PDF</button>
+
+                    <div class="mt-8 bg-gray-800 p-6 rounded-2xl">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Desglose del Precio Final</h3>
+                        <canvas id="grafico-costos"></canvas>
+                    </div>
+                    
                 </div>
             </div>
         </main>
     </div>
 
+    </div>
+    
+
     <footer class="text-center mt-12 text-sm text-gray-500">
         Hecho con amor por Ignacio Developer · <a href="https://pinto2291.github.io/ignacio_website/" target="_blank" class="text-emerald-400 hover:underline">Portafolio</a>
     </footer>
 
+    <div id="reporte-imprimible" class="hidden"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="script.js"></script>
 
 </body>

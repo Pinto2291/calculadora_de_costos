@@ -19,3 +19,27 @@ input[type=number]::-webkit-outer-spin-button {
             .text-lg { font-size: 0.875rem; }
             .p-3, .p-4, .p-6 { padding: 0.5rem; }
         }
+
+       @media print {
+  /* Oculta explícitamente los contenedores principales que no se imprimen */
+  #app-container, #config-modal {
+    display: none !important;
+  }
+
+  /* Asegura que SOLO el reporte sea visible y esté bien formateado */
+  #reporte-imprimible {
+    display: block !important;
+    position: static;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    color: black;
+    background: white;
+  }
+
+  /* Resetea el fondo del body para que no aparezca oscuro en la impresión */
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+}
