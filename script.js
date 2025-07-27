@@ -303,6 +303,24 @@ function calcular() {
         }, 100);
     });
 
+    // --- Lógica para el botón "Borrar Todos los Insumos" ---
+
+        const borrarInsumosBtn = document.getElementById('borrar-insumos');
+
+        borrarInsumosBtn.addEventListener('click', () => {
+            // Pedimos confirmación para evitar borrados accidentales
+            if (confirm('¿Estás segura de que quieres eliminar todos los insumos de la lista?')) {
+                // Vaciamos el contenedor de la lista
+                listaInsumos.innerHTML = '';
+                
+                // Recalculamos para que los totales vuelvan a cero
+                calcular();
+                
+                // Opcional: Añadimos una fila en blanco para empezar de nuevo
+                agregarInsumo();
+            }
+        });
+
     // Añadir un input por defecto al cargar
     window.addEventListener('DOMContentLoaded', () => {
         agregarInsumo();

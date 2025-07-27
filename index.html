@@ -74,7 +74,12 @@
                         <div class="col-span-1 text-center">Eliminar</div>
                     </div>
                     <div id="lista-insumos" class="space-y-4"></div>
-                    <button id="agregar-insumo" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">Añadir Nuevo Insumo</button>
+
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button id="borrar-insumos" class="w-full bg-red-800 hover:bg-red-700 text-white py-3 rounded-lg">Borrar Todos los Insumos</button>
+                        <button id="agregar-insumo" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">Añadir Nuevo Insumo</button>
+                    </div>
+                    
                 </div>
 
                 <div class="border-t border-gray-700 pt-6 space-y-6">
@@ -102,10 +107,14 @@
                         <div id="precio-bs" class="text-lg text-emerald-200 mt-2">Bs 0.00</div>
                         <button id="redondear" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg">Redondear valor</button>
                         <button id="imprimir" class="mt-4 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">Imprimir / Guardar PDF</button>
+                        
                         <div class="mt-8 bg-gray-800 p-6 rounded-2xl">
                             <h3 class="text-xl font-semibold mb-4 text-center">Desglose del Precio Final</h3>
-                            <canvas id="grafico-costos"></canvas>
+                            <div class="max-w-sm mx-auto">
+                                <canvas id="grafico-costos"></canvas>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </main>
